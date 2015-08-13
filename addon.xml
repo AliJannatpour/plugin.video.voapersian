@@ -14,5 +14,6 @@
         <summary lang="en">A Simple VOA Persian video browser for Kodi</summary>
         <description lang="en">VOA Persian offline videos</description>
         <source>https://github.com/AliJannatpour/plugin.video.voapersian</source>
+        <language>fa</language>
     </extension>
 </addon>
