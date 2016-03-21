@@ -1,3 +1,6 @@
+[B]0.7.1[/B]
+. 2016-03-21 getPrograms() modified due to the new DOM 
+
 [B]0.7.0[/B]
 . 2015-07-26 Restructured 
 . 2015-07-26 Added IsPlayable

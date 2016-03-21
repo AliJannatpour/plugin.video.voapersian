@@ -21,7 +21,7 @@ __plugin__ = "VOA Persian"
 __author__ = "alij"
 __url__ = ""
 __credits__ = "Kodi Wikis"
-__version__ = "0.7.0"
+__version__ = "0.7.1"
 
 
 # global data
@@ -93,10 +93,10 @@ def getArg(key):
 
 def getPrograms():
 	result = []
-	node = getDOM(urljoin(__site_baseurl, "/programindex.html"))
-	node = node.find("div", {"class" : "programlist"}).findAll("h4")
+	node = getDOM(urljoin(__site_baseurl, "/info/tv-programindex/5050.html"))
+	node = node.findAll("div", {"class" : "boxmediathumb_inner"})
 	for link in node:
-		link = link.find("a")
+		link = link.find("h3", {"class" : "black"}).find("a")
 		url = link['href']
 		title = link.text
 		entitle = re.search('(?<=/archive/)[^/]*', link['href']).group(0)
@@ -132,14 +132,12 @@ def resolveVideo(page_url):
 	return link['content']
 
 def getLiveLink():
-	"""
 	url = "/" # alt '/info/tv-guide/2822.html'
 	node = getDOM(urljoin(__site_baseurl, url))
 	link = node.find("a", {"class" : "itv_icon"})
 	if not(link == None):
 		url = link['href']
-	"""
-	url = '/media/videotube/86.html?rnd=20532'
+	# DEBUG '/media/videotube/86.html?rnd=20532'
 	node = getDOM(urljoin(__site_baseurl, url))
 	link = node.find("div", {"class" : "content_media"})
 	if not(link == None):
@@ -191,5 +189,6 @@ def main():
 	
 try:
 	main()
-except:
-	alert('Error retrieving data from VOA Persian website')
+except Exception, e:
+	#alert(str(e))
+	alert('Error retrieving data from website')
