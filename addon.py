@@ -21,7 +21,7 @@ __plugin__ = "VOA Persian"
 __author__ = "alij"
 __url__ = ""
 __credits__ = "Kodi Wikis"
-__version__ = "0.7.1"
+__version__ = "0.7.2"
 
 
 # global data
@@ -93,18 +93,21 @@ def getArg(key):
 
 def getPrograms():
 	result = []
-	node = getDOM(urljoin(__site_baseurl, "/info/tv-programindex/5050.html"))
-	node = node.findAll("div", {"class" : "boxmediathumb_inner"})
+	node = getDOM(urljoin(__site_baseurl, "http://ir.voanews.com/programindex.html?tab=TV"))
+	node = node.findAll("div", {"class" : "media-block width-img size-3"})
 	for link in node:
-		link = link.find("h3", {"class" : "black"}).find("a")
+		link = link.find("a", {"class" : "img-wrapper"})
 		url = link['href']
-		title = link.text
-		entitle = re.search('(?<=/archive/)[^/]*', link['href']).group(0)
-		entitle = entitle.replace('-', ' ')
-		entitle = entitle.replace('_', ' ')
-		entitle = entitle.capitalize()
-		link = link.parent.parent.parent
 		img = link.find('img')['src']
+		link = link.parent
+		link = link.find("div", {"class" : "content"}).find("span", {"class" : "title"})
+		title = link.text
+		#entitle = re.search('(?<=/archive/)[^/]*', link['href']).group(0)
+		#entitle = entitle.replace('-', ' ')
+		#entitle = entitle.replace('_', ' ')
+		#entitle = entitle.capitalize()
+		#link = link.parent.parent.parent
+		entitle = ""
 		result.append({'title': title, 'entitle': entitle, 'img': img, 'url': url})
 	#result.sort(key=lambda i: i['title'], reverse=False)
 	return result
@@ -112,14 +115,16 @@ def getPrograms():
 def getVideoLinks(container_url):
 	result = []
 	node = getDOM(urljoin(__site_baseurl, container_url))
-	node = node.find("div", {"id" : "programZonesItems"})
+	node = node.find("div", {"id" : "episodes"})
 	if not(node == None):
-		node = node.findAll("div", {"class" : "date black"})
+		node = node.findAll("li")
 	for link in node:
-		if not(link is None or link.text is None):
-			title = link.text
-			url = link.parent.findNext('a')['href']
-			img = link.parent.findNext('a').findNext('img')['src']
+		if not(link is None):
+			#title = link.text
+			url = link.find('a')['href']
+			img = link.find('a').find('img')['src']
+			title = link.find('span', { "class" : "title" }).text
+			title = title + " - " + link.find('span', { "class" : "date" }).text
 			result.append({'title': title, 'img': img, 'url': url})
 	return result
 

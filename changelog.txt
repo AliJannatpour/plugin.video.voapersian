@@ -1,3 +1,6 @@
+[B]0.7.2[/B]
+. 2016-06-20 getPrograms(), getVideoLinks() modified due to the new DOM 
+
 [B]0.7.1[/B]
 . 2016-03-21 getPrograms() modified due to the new DOM 
 
