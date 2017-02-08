@@ -21,7 +21,7 @@ __plugin__ = "VOA Persian"
 __author__ = "alij"
 __url__ = ""
 __credits__ = "Kodi Wikis"
-__version__ = "0.7.2"
+__version__ = "0.7.3"
 
 
 # global data
@@ -130,11 +130,16 @@ def getVideoLinks(container_url):
 
 def resolveVideo(page_url):
 	node = getDOM(urljoin(__site_baseurl, page_url))
-	link = node.find("meta", {"name" : "twitter:player:stream"})
-	if link is None or link['content'] is None:
-		alert('Error retrieving the video file')
+	#link = node.find("meta", {"name" : "twitter:player:stream"})
+	#if link is None or link['content'] is None:
+	#	raise ValueError('Error retrieving the video file')
+	#	return None
+	#return link['content']
+	link = node.find("video")
+	if link is None or link['src'] is None:
+		raise ValueError('Error retrieving the video file')
 		return None
-	return link['content']
+	return link['src']
 
 def getLiveLink():
 	url = "/" # alt '/info/tv-guide/2822.html'
