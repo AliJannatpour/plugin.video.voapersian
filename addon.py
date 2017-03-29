@@ -21,7 +21,7 @@ __plugin__ = "VOA Persian"
 __author__ = "alij"
 __url__ = ""
 __credits__ = "Kodi Wikis"
-__version__ = "0.7.3"
+__version__ = "0.7.4"
 
 
 # global data
@@ -93,10 +93,10 @@ def getArg(key):
 
 def getPrograms():
 	result = []
-	node = getDOM(urljoin(__site_baseurl, "http://ir.voanews.com/programindex.html?tab=TV"))
+	node = getDOM(urljoin(__site_baseurl, "http://ir.voanews.com/programs/tv"))
 	node = node.findAll("div", {"class" : "media-block width-img size-3"})
 	for link in node:
-		link = link.find("a", {"class" : "img-wrapper"})
+		link = link.find("a", {"class" : "img-wrap"})
 		url = link['href']
 		img = link.find('img')['src']
 		link = link.parent
@@ -200,5 +200,5 @@ def main():
 try:
 	main()
 except Exception, e:
-	#alert(str(e))
-	alert('Error retrieving data from website')
+	alert(str(e))
+	#alert('Error retrieving data from website')

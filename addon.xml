@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.voapersian" name="VOA Persian" version="0.7.3" provider-name="alij">
+<addon id="plugin.video.voapersian" name="VOA Persian" version="0.7.4" provider-name="alij">
     <requires>
         <import addon="xbmc.python" version="2.1.0"/>
         <import addon="script.module.simplejson" version="2.0.9"/>
