@@ -1,5 +1,5 @@
 ﻿"""
-    VOA Persian Kodi Plugin - written by Ali Jannatpour (google me)
+    VOA Persian Kodi Plugin - written by Ali Jannatpour
     My First Plugin and I hate python!
 
     Credits:
@@ -11,9 +11,10 @@
 
 import xbmcplugin,xbmcgui,xbmcaddon
 import urllib,urlparse,urllib2,re,os,cookielib,string
-from BeautifulSoup import BeautifulSoup
+import requests
 import json
 from urlparse import urljoin
+from bs4 import BeautifulSoup
 
 # plugin constants
 
@@ -21,7 +22,7 @@ __plugin__ = "VOA Persian"
 __author__ = "alij"
 __url__ = ""
 __credits__ = "Kodi Wikis"
-__version__ = "0.7.4"
+__version__ = "0.7.5"
 
 
 # global data
@@ -52,9 +53,13 @@ def alert(msg):
 	dialog = xbmcgui.Dialog()
 	dialog.ok(addonname, msg)
 
+def getDoc(url):
+        headers = {'User-Agent':'Mozilla/5.0'}
+        page = requests.get(url)
+        return page.text
+
 def getDOM(url):
-	resp = http_request.open(url)
-	return BeautifulSoup(resp.read())
+	return BeautifulSoup(getDoc(url), 'html.parser')
 
 def play(video):
 	playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
@@ -94,14 +99,14 @@ def getArg(key):
 def getPrograms():
 	result = []
 	node = getDOM(urljoin(__site_baseurl, "http://ir.voanews.com/programs/tv"))
-	node = node.findAll("div", {"class" : "media-block width-img size-3"})
+	node = node.findAll("div", {"class" : "media-block has-img size-3"})
 	for link in node:
 		link = link.find("a", {"class" : "img-wrap"})
 		url = link['href']
 		img = link.find('img')['src']
 		link = link.parent
 		link = link.find("div", {"class" : "content"}).find("span", {"class" : "title"})
-		title = link.text
+		title = link.text.decode("utf-8")
 		#entitle = re.search('(?<=/archive/)[^/]*', link['href']).group(0)
 		#entitle = entitle.replace('-', ' ')
 		#entitle = entitle.replace('_', ' ')
@@ -142,14 +147,31 @@ def resolveVideo(page_url):
 	return link['src']
 
 def getLiveLink():
-	url = "/" # alt '/info/tv-guide/2822.html'
+	url = "/"
 	node = getDOM(urljoin(__site_baseurl, url))
-	link = node.find("a", {"class" : "itv_icon"})
+	node = node.find("div", { "id": ["menu-item-watch-box"] })
+	#link = node.find("ul").find("div").findNext("ul").find("a")
+	link = node.select_one("> ul > div > ul > a")
+	if not(link == None):
+		alert("1")
+	else:
+		alert("2")
 	if not(link == None):
 		url = link['href']
-	# DEBUG '/media/videotube/86.html?rnd=20532'
+	# DEBUG '/t/86.html?s=104686'
+	alert(url)
 	node = getDOM(urljoin(__site_baseurl, url))
-	link = node.find("div", {"class" : "content_media"})
+	alert(node)
+	link = node.find("div", {"class", "media-container"})
+	if not(link == None):
+		alert("OK")
+		link = link.find("video")
+	if not(link == None):
+		url = link['src']
+		alert(url)
+		url = getDOM(urljoin(__site_baseurl, url))
+	alert(url)
+	"""
 	if not(link == None):
 		link = link.findAll('script')[0].find(text=True)
 		link = link[link.find("configFilePath")+15:]
@@ -158,13 +180,12 @@ def getLiveLink():
 		link = link.replace(":","")
 		link = link.replace(" ","")
 		link = urllib2.unquote(link).decode('utf-8')
-	# DEBUG '/flashxml/InternetTV.aspx?id=86&mode=auto&stamp=20150725155618'
 	if not (link == None):
 		url = link 
 		node = getDOM(urljoin(__site_baseurl, url))
 	link = node.find('media', {"type" : "video"})['playbackurl']
-	# DEBUG 'rtmp://cp233584.live.edgefcs.net/live/LIVE_IPTV_VOA_PNN@119414'
-	return link
+	"""
+	return url
 
 # main
 
@@ -196,9 +217,9 @@ def main():
 	else:
 		play(resolveVideo(getArg('voa-link')))
 	return True
-	
+
 try:
 	main()
 except Exception, e:
-	alert(str(e))
-	#alert('Error retrieving data from website')
+	#alert(str(e))
+	alert('Error retrieving data from website')
