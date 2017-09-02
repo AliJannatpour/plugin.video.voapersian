@@ -1,5 +1,5 @@
 [B]0.7.5[/B]
-. 2017-08-31 Upgrade to BS4, getPrograms() modified due to DOM change
+. 2017-08-31 Upgrade to BS4, DOM change, encoding issue
 
 [B]0.7.4[/B]
 . 2017-03-29 getPrograms() modified due to DOM change 

@@ -56,7 +56,7 @@ def alert(msg):
 def getDoc(url):
         headers = {'User-Agent':'Mozilla/5.0'}
         page = requests.get(url)
-        return page.text
+        return page.text.decode('utf-8','ignore')
 
 def getDOM(url):
 	return BeautifulSoup(getDoc(url), 'html.parser')
@@ -106,7 +106,7 @@ def getPrograms():
 		img = link.find('img')['src']
 		link = link.parent
 		link = link.find("div", {"class" : "content"}).find("span", {"class" : "title"})
-		title = link.text.decode("utf-8")
+		title = link.text
 		#entitle = re.search('(?<=/archive/)[^/]*', link['href']).group(0)
 		#entitle = entitle.replace('-', ' ')
 		#entitle = entitle.replace('_', ' ')
