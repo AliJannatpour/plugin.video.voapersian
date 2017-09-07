@@ -44,6 +44,8 @@ __site_baseurl = "http://ir.voanews.com/"
 
 #xbmcplugin.setContent(addon_handle, 'movies')
 
+requests.packages.urllib3.disable_warnings()
+
 cookies = cookielib.CookieJar()
 http_request = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookies))
 
@@ -56,7 +58,7 @@ def alert(msg):
 def getDoc(url):
         headers = {'User-Agent':'Mozilla/5.0'}
         page = requests.get(url)
-        return page.text.decode('utf-8','ignore')
+        return page.text
 
 def getDOM(url):
 	return BeautifulSoup(getDoc(url), 'html.parser')
@@ -221,5 +223,5 @@ def main():
 try:
 	main()
 except Exception, e:
-	#alert(str(e))
-	alert('Error retrieving data from website')
+	alert("ERR:" + str(e))
+	#alert('Error retrieving data from VOA Persian website')
