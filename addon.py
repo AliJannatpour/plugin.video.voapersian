@@ -58,7 +58,9 @@ def alert(msg):
 def getDoc(url):
         headers = {'User-Agent':'Mozilla/5.0'}
         page = requests.get(url)
-        return page.text
+	page.encoding = 'utf-8'
+        result = page.text
+	return result
 
 def getDOM(url):
 	return BeautifulSoup(getDoc(url), 'html.parser')
